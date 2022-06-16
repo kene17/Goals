@@ -5,6 +5,8 @@ const Goal = require('../models/goalModel')
 //@route Get /api/goals
 //@access Private
 const getGoals = asyncHandler(async(req, res) => {
+    //gets only this specific users goals
+    //we can access req,user because of the protect middleware
     const goals = await Goal.find({user: req.user.id})
     res.status(200).json(goals)
 })
@@ -17,7 +19,9 @@ const setGoal = asyncHandler(async(req, res) => {
         res.status(400)
         throw new Error('Please add a text parameter')
     }
-
+    //the model has 2 fields the text and user parameters
+    //So user parameter need to be passed using the req.user
+    //text parameter gets access to the users entered data using req.body.text
     const goal = await Goal.create({
         text: req.body.text,
         user: req.user.id,
