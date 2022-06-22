@@ -30,7 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
-
+//if the user was created successfully, return a json object
   if (user) {
     res.status(201).json({
       _id: user.id,
@@ -72,6 +72,7 @@ const loginUser = asyncHandler(async (req, res) => {
 //@access Private
 //protect routes with middleware
 const getMe = asyncHandler(async (req, res) => {
+  //req.user.id is for whatever user that has been authenticated
   const {_id, name, email} = await User.findById(req.user.id)
   res.status(200).json({
       id: _id,
