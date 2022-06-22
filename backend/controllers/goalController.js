@@ -1,13 +1,14 @@
 const asyncHandler = require('express-async-handler');
 const Goal = require('../models/goalModel')
-
+const User = require('../models/userModel')
 //@desc Get goals
 //@route Get /api/goals
 //@access Private
+//now you can only see specific users goals
 const getGoals = asyncHandler(async(req, res) => {
     //gets only this specific users goals
     //we can access req,user because of the protect middleware
-    const goals = await Goal.find({user: req.user.id})
+    const goals = await Goal.find({user: req.user.id})//gotten form middleware token
     res.status(200).json(goals)
 })
 
@@ -24,7 +25,7 @@ const setGoal = asyncHandler(async(req, res) => {
     //text parameter gets access to the users entered data using req.body.text
     const goal = await Goal.create({
         text: req.body.text,
-        user: req.user.id,
+        user: req.user.id,//gotten from middleware token
     })
     res.status(200).json(goal)
 })
