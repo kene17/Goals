@@ -17,7 +17,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      return await authService.register(user);//sends the user to make post request and return data from the backend
+      return await authService.register(user); //sends the user to make post request and return data from the backend
     } catch (error) {
       const message =
         (error.response &&
@@ -31,12 +31,22 @@ export const register = createAsyncThunk(
 );
 
 //Logout
-export const logout = createAsyncThunk('auth/logout', async() =>{
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await authService.logout();
+});
 
-  await authService.logout()
-
-}) 
-
+//Login user
+export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
+  try {
+    return await authService.login(user); //sends the user to make post request and return data from the backend
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 //Register User
 export const authSlice = createSlice({
@@ -52,7 +62,7 @@ export const authSlice = createSlice({
   },
 
   extraReducers: {
-    [register.pending]: (state, action) => {
+    [register.pending]: (state) => {
       state.isLoading = true;
     },
     [register.fulfilled]: (state, action) => {
@@ -60,23 +70,32 @@ export const authSlice = createSlice({
       state.isSuccess = true;
       state.user = action.payload; //what's returned from the register try block
     },
-    [register.rejectted]: (state, action) => {
+    [register.rejected]: (state, action) => {
       state.error = true;
       state.isLoading = false;
       state.message = action.payload; //what's gotten from the register catch block
       state.user = null;
     },
-    [logout.fulfilled]: (state, action) =>{
+
+    [login.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [login.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.user = action.payload; //what's returned from the register try block
+    },
+    [login.rejected]: (state, action) => {
+      state.error = true;
+      state.isLoading = false;
+      state.message = action.payload; //what's gotten from the register catch block
       state.user = null;
-    }
+    },
+    [logout.fulfilled]: (state, action) => {
+      state.user = null;
+    },
   },
 });
-
-//Logout user
-
-
-
-
 
 export const { reset } = authSlice.actions;
 export default authSlice.reducer;
