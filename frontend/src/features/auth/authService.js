@@ -1,40 +1,38 @@
-//for http request and local storage
+import axios from 'axios'
 
-import axios from "axios";
+const API_URL = '/api/users/'
 
-const API_URL = "/api/users/";
-const API = axios.create({ baseURL: "http://localhost:8000" });
-//Register user
-
+// Register user
 const register = async (userData) => {
-  const response = await API.post(API_URL, userData);
+  const response = await axios.post(API_URL, userData)
 
-  //axios puts the response into an object called data
-
-  if (response?.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+  if (response.data) {
+    localStorage.setItem('user', JSON.stringify(response.data))
   }
-  return response?.data;
-};
 
+  return response.data
+}
+
+// Login user
 const login = async (userData) => {
-  const response = await API.post(API_URL + "login", userData);
+  const response = await axios.post(API_URL + 'login', userData)
 
-  if (response?.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+  if (response.data) {
+    localStorage.setItem('user', JSON.stringify(response.data))
   }
 
-  return response?.data;
-};
+  return response.data
+}
 
+// Logout user
 const logout = () => {
-  localStorage.removeItem("user");
-};
+  localStorage.removeItem('user')
+}
 
 const authService = {
   register,
   logout,
   login,
-};
+}
 
-export default authService;
+export default authService

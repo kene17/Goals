@@ -1,4 +1,3 @@
-// runs when you send a request to an endpoint
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
@@ -12,14 +11,12 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       // Get token from header
-      //bearer token
       token = req.headers.authorization.split(' ')[1]
 
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-      // Get user from the token, id is gotten from the token set in userController
-      //now we can access req.user from any route that is protected
+      // Get user from the token
       req.user = await User.findById(decoded.id).select('-password')
 
       next()

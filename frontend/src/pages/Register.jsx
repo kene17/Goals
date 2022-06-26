@@ -53,7 +53,7 @@ function Register() {
         email,
         password,
       }
-      console.log(userData);
+
       dispatch(register(userData))
     }
   }
@@ -128,4 +128,4 @@ function Register() {
   )
 }
 
-export default Register;
+export default Register
